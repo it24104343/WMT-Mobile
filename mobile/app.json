@@ -3,7 +3,6 @@
     "name": "Tuition Class Mobile",
     "slug": "tuition-class-mobile",
     "version": "1.0.0",
-    "sdkVersion": "49.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "tuitionclass",
@@ -12,6 +11,7 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.it24104343.tuitionclass",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",

@@ -1,0 +1,223 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== LIGHT MODE (DEFAULT) ===== */
+html {
+  background-color: #ffffff;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background-color: #ffffff;
+  background-image: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+  min-height: 100vh;
+  color: #1f2937;
+}
+
+#root {
+  background-color: #ffffff;
+}
+
+select, input, textarea {
+  color: #1f2937;
+  background-color: #ffffff;
+}
+
+/* ===== DARK MODE ===== */
+html.dark {
+  background-color: #0f172a;
+}
+
+html.dark body {
+  background-color: #0f172a;
+  background-image: radial-gradient(circle at top left, #1e293b 0%, #0f172a 100%);
+  color: #f1f5f9;
+}
+
+html.dark #root {
+  background-color: #0f172a;
+  color: #f1f5f9;
+}
+
+html.dark select, 
+html.dark input, 
+html.dark textarea {
+  color: #f1f5f9;
+  background-color: #1e293b;
+  border-color: #475569;
+}
+
+html.dark select option {
+  background-color: #1e293b;
+  color: #f1f5f9;
+}
+
+/* Custom scrollbar - Light mode */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Custom scrollbar - Dark mode */
+html.dark ::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 4px;
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Toast customization */
+.Toastify__toast {
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+/* Table enhancements */
+.table-container {
+  @apply bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-300 dark:border-gray-700 overflow-hidden;
+}
+
+.table-container table {
+  @apply w-full;
+}
+
+.table-container th {
+  @apply px-5 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-widest bg-white dark:bg-gray-800 border-b border-gray-300 dark:border-gray-700;
+}
+
+.table-container td {
+  @apply px-5 py-4 text-sm text-gray-900 dark:text-gray-200 border-b border-gray-200 dark:border-gray-700;
+}
+
+.table-nowrap td {
+  @apply whitespace-nowrap;
+}
+
+.table-container tbody tr:hover {
+  @apply bg-gray-50 dark:bg-gray-700;
+}
+
+/* Form styling */
+.form-input {
+  @apply w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors shadow-sm;
+}
+
+.form-label {
+  @apply block text-sm font-medium text-gray-900 dark:text-gray-200 mb-1.5;
+}
+
+.form-error {
+  @apply text-red-600 dark:text-red-400 text-xs mt-1;
+}
+
+/* Button styles */
+.btn {
+  @apply px-5 py-2.5 rounded-xl font-medium transition-all duration-300 inline-flex items-center justify-center gap-2;
+}
+
+.btn-primary {
+  @apply bg-gradient-aurora text-white shadow-soft hover:-translate-y-0.5 hover:shadow-soft-hover focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 border-0;
+  background-size: 150% auto;
+}
+.btn-primary:hover {
+  background-position: right center;
+}
+
+.btn-secondary {
+  @apply bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 border-0;
+}
+
+.btn-danger {
+  @apply bg-red-600 text-white hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900;
+}
+
+.btn-success {
+  @apply bg-green-600 text-white hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900;
+}
+
+/* Card styles */
+.card {
+  @apply bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-300 dark:border-gray-700 p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+}
+
+/* Badge styles */
+.badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+
+.badge-success {
+  @apply bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300;
+}
+
+.badge-warning {
+  @apply bg-yellow-100 dark:bg-yellow-900/40 text-yellow-800 dark:text-yellow-300;
+}
+
+.badge-danger {
+  @apply bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-300;
+}
+
+.badge-info {
+  @apply bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300;
+}
+
+/* Loading spinner */
+.spinner {
+  @apply animate-spin rounded-full border-2 border-gray-300 dark:border-gray-600 border-t-primary-600;
+}
+
+/* ===== CUSTOM UTILITIES FOR DARK MODE TEXT ===== */
+/* These utilities ensure consistent text visibility across light and dark modes */
+
+/* Dark mode text utilities - for headings and main text */
+@layer utilities {
+  /* Main/heading text - visible in both light and dark modes */
+  .text-heading-primary {
+    @apply text-gray-900 dark:text-gray-50;
+  }
+
+  /* Secondary/description text - visible in both light and dark modes */
+  .text-heading-secondary {
+    @apply text-gray-600 dark:text-gray-300;
+  }
+
+  /* Muted/tertiary text - visible in both light and dark modes */
+  .text-heading-muted {
+    @apply text-gray-500 dark:text-gray-400;
+  }
+
+  /* Form labels and helper text */
+  .text-label {
+    @apply text-gray-700 dark:text-gray-300;
+  }
+
+  /* Small/detail text */
+  .text-detail {
+    @apply text-gray-600 dark:text-gray-400;
+  }
+
+  /* Placeholder-like text */
+  .text-placeholder {
+    @apply text-gray-500 dark:text-gray-500;
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "22debd37-d418-4ccc-bab7-24fcb8bd3efc"
+      }
+    },
+    "android": {
+      "package": "com.mahela1000.tutionclasssystem"
+    }
+  }
+}

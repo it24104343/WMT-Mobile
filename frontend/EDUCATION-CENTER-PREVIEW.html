@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Education Center Design Preview</title>
+    <link rel="stylesheet" id="theme-link" href="styles/theme-education-center.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .theme-selector {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .theme-selector-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .theme-selector h1 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-right: auto;
+            color: #1f2937;
+        }
+
+        .theme-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .theme-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            background: white;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .theme-btn:hover {
+            border-color: #6366f1;
+            background: #f0f9ff;
+        }
+
+        .theme-btn.active {
+            background: #6366f1;
+            color: white;
+            border-color: #6366f1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 6rem 1.5rem 3rem;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text);
+        }
+
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .card p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .stat-card .stat-number {
+            font-size: 2.5rem;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+            color: white;
+            padding: 3rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.95;
+        }
+
+        .program-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e5e7eb;
+        }
+
+        .program-card-image {
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(135deg, #eff6ff, #fce7f3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+
+        .program-card-content {
+            padding: 1.5rem;
+        }
+
+        .program-card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .teacher-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e5e7eb;
+            text-align: center;
+        }
+
+        .teacher-avatar {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #fce7f3, #e9d5ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        .teacher-info {
+            padding: 1.5rem;
+        }
+
+        .teacher-name {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .teacher-role {
+            color: #6366f1;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid #6366f1;
+        }
+
+        .testimonial-quote {
+            font-style: italic;
+            color: #1f2937;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .testimonial-author {
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .testimonial-role {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-desc {
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid #e5e7eb;
+            color: #6b7280;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .theme-selector-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .preview-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="theme-selector">
+        <div class="theme-selector-content">
+            <h1>🎓 Education Center Preview</h1>
+            <div class="theme-buttons">
+                <button class="theme-btn active" onclick="switchTheme('theme-education-center.css')">🎓 Education</button>
+                <button class="theme-btn" onclick="switchTheme('theme-tech-blue.css')">💎 Tech Blue</button>
+                <button class="theme-btn" onclick="switchTheme('theme-fresh-green.css')">🌿 Fresh Green</button>
+                <button class="theme-btn" onclick="switchTheme('theme-dark-gold.css')">✨ Dark Gold</button>
+                <button class="theme-btn" onclick="switchTheme('theme-vibrant-coral.css')">🌊 Coral</button>
+                <button class="theme-btn" onclick="switchTheme('theme-minimalist-slate.css')">📐 Slate</button>
+                <button class="theme-btn" onclick="switchTheme('theme-sunset-pink.css')">🌅 Sunset</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- HERO SECTION -->
+        <div class="section">
+            <div class="hero">
+                <h1>🎓 Educating with Heart and Care</h1>
+                <p>We've been proudly shaping young minds since 1989. Join us in creating a world where every child is a star.</p>
+                <button class="btn btn-primary" style="color: white; background: white; color: #6366f1; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                    Enroll Your Child
+                </button>
+            </div>
+        </div>
+
+        <!-- STAT CARDS SECTION -->
+        <div class="section">
+            <h2 class="section-title">📊 Our Impact</h2>
+            <div class="preview-grid">
+                <div class="stat-card">
+                    <div style="font-size: 2.5rem; margin-bottom: 1rem;">👶</div>
+                    <div class="stat-number">1,500+</div>
+                    <div class="stat-label">Happy Children</div>
+                </div>
+                <div class="stat-card">
+                    <div style="font-size: 2.5rem; margin-bottom: 1rem;">👨‍🏫</div>
+                    <div class="stat-number">89</div>
+                    <div class="stat-label">Expert Teachers</div>
+                </div>
+                <div class="stat-card">
+                    <div style="font-size: 2.5rem; margin-bottom: 1rem;">👨‍👩‍👧</div>
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Avg. Group Size</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROGRAMS SECTION -->
+        <div class="section">
+            <h2 class="section-title">📚 Our Programs</h2>
+            <div class="preview-grid">
+                <div class="program-card">
+                    <div class="program-card-image">👶</div>
+                    <div class="program-card-content">
+                        <div style="color: #6366f1; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem;">0-12 MONTHS</div>
+                        <h3 class="program-card-title">Infants</h3>
+                        <p style="color: #6b7280; font-size: 0.9rem; line-height: 1.5;">Nurturing care and early development activities for our youngest learners.</p>
+                    </div>
+                </div>
+                <div class="program-card">
+                    <div class="program-card-image">🧒</div>
+                    <div class="program-card-content">
+                        <div style="color: #6366f1; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem;">12-24 MONTHS</div>
+                        <h3 class="program-card-title">Toddlers</h3>
+                        <p style="color: #6b7280; font-size: 0.9rem; line-height: 1.5;">Interactive play-based learning with focus on social-emotional development.</p>
+                    </div>
+                </div>
+                <div class="program-card">
+                    <div class="program-card-image">👧</div>
+                    <div class="program-card-content">
+                        <div style="color: #6366f1; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem;">2-3 YEARS</div>
+                        <h3 class="program-card-title">Early Preschool</h3>
+                        <p style="color: #6b7280; font-size: 0.9rem; line-height: 1.5;">Structured activities designed to develop language, motor, and cognitive skills.</p>
+                    </div>
+                </div>
+                <div class="program-card">
+                    <div class="program-card-image">📚</div>
+                    <div class="program-card-content">
+                        <div style="color: #6366f1; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem;">4-5 YEARS</div>
+                        <h3 class="program-card-title">Preschool</h3>
+                        <p style="color: #6b7280; font-size: 0.9rem; line-height: 1.5;">Comprehensive preparation for kindergarten with academic and social readiness.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FEATURES SECTION -->
+        <div class="section" style="background: #f9fafb; padding: 3rem; border-radius: 12px;">
+            <h2 class="section-title">✨ Why Choose Us?</h2>
+            <div class="preview-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <h3 class="feature-title">Early Development</h3>
+                    <p class="feature-desc">Research-based approach to maximize developmental potential.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h3 class="feature-title">Academic Success</h3>
+                    <p class="feature-desc">Children who attend preschool are more prepared for later grades.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">😌</div>
+                    <h3 class="feature-title">Peace of Mind</h3>
+                    <p class="feature-desc">Safe, nurturing environment reducing stress for parents.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEPS SECTION -->
+        <div class="section">
+            <h2 class="section-title">🎯 Our 4-Step Process</h2>
+            <div class="preview-grid">
+                <div class="card">
+                    <div style="display: inline-flex; align-items: center; justify-content: center; width: 60px; height: 60px; background: linear-gradient(135deg, #6366f1, #ec4899); color: white; border-radius: 50%; font-size: 1.8rem; font-weight: 800; margin-bottom: 1rem;">1</div>
+                    <h3>Acquaintance</h3>
+                    <p>Our experienced teachers establish contact and gently introduce your child to our center.</p>
+                </div>
+                <div class="card">
+                    <div style="display: inline-flex; align-items: center; justify-content: center; width: 60px; height: 60px; background: linear-gradient(135deg, #6366f1, #ec4899); color: white; border-radius: 50%; font-size: 1.8rem; font-weight: 800; margin-bottom: 1rem;">2</div>
+                    <h3>Tour</h3>
+                    <p>Your child explores at their own pace with optional short visits or full-day experiences.</p>
+                </div>
+                <div class="card">
+                    <div style="display: inline-flex; align-items: center; justify-content: center; width: 60px; height: 60px; background: linear-gradient(135deg, #6366f1, #ec4899); color: white; border-radius: 50%; font-size: 1.8rem; font-weight: 800; margin-bottom: 1rem;">3</div>
+                    <h3>Learn & Play</h3>
+                    <p>Education through games and innovative methods that captivate young minds.</p>
+                </div>
+                <div class="card">
+                    <div style="display: inline-flex; align-items: center; justify-content: center; width: 60px; height: 60px; background: linear-gradient(135deg, #6366f1, #ec4899); color: white; border-radius: 50%; font-size: 1.8rem; font-weight: 800; margin-bottom: 1rem;">4</div>
+                    <h3>Development</h3>
+                    <p>We unlock potential by identifying talents and abilities at an early stage.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TEACHERS SECTION -->
+        <div class="section">
+            <h2 class="section-title">👨‍🏫 Meet Our Team</h2>
+            <div class="preview-grid">
+                <div class="teacher-card">
+                    <div class="teacher-avatar">HW</div>
+                    <div class="teacher-info">
+                        <div class="teacher-name">Helen White</div>
+                        <div class="teacher-role">Art & Psychology</div>
+                        <p style="color: #6b7280; font-size: 0.9rem; line-height: 1.5;">Over 30 years of experience creating safe and joyful learning environments.</p>
+                    </div>
+                </div>
+                <div class="teacher-card">
+                    <div class="teacher-avatar">KW</div>
+                    <div class="teacher-info">
+                        <div class="teacher-name">Kate Wilson</div>
+                        <div class="teacher-role">Toddlers & Waddles</div>
+                        <p style="color: #6b7280; font-size: 0.9rem; line-height: 1.5;">Creative educator using hands-on activities and music to engage young learners.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TESTIMONIALS SECTION -->
+        <div class="section">
+            <h2 class="section-title">💬 Happy Parents</h2>
+            <div class="preview-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-quote">"My son has thrived in this environment! The staff goes above and beyond to create a nurturing space."</div>
+                    <div class="testimonial-author">Lucy Wilson</div>
+                    <div class="testimonial-role">Dany's parent | Infants Group</div>
+                    <div style="font-size: 0.85rem; color: #9ca3af; margin-top: 0.5rem;">May 15, 2024</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-quote">"My daughter has learned so much! The activities are engaging and the teachers are amazing."</div>
+                    <div class="testimonial-author">Jane Peterson</div>
+                    <div class="testimonial-role">Lucy's parent | Preschool Group</div>
+                    <div style="font-size: 0.85rem; color: #9ca3af; margin-top: 0.5rem;">December 11, 2024</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <p><strong>🎓 Education Center Design v1.0</strong></p>
+            <p>Built with modern React components and beautiful CSS styling</p>
+            <p style="margin-top: 1.5rem; font-size: 0.9rem;">✨ Click theme buttons above to switch designs</p>
+        </div>
+    </div>
+
+    <script>
+        function switchTheme(themeName) {
+            const link = document.getElementById('theme-link');
+            link.href = `styles/${themeName}`;
+            
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            localStorage.setItem('preferredTheme', themeName);
+        }
+
+        window.addEventListener('load', () => {
+            const savedTheme = localStorage.getItem('preferredTheme') || 'theme-education-center.css';
+            const link = document.getElementById('theme-link');
+            link.href = `styles/${savedTheme}`;
+        });
+    </script>
+</body>
+</html>

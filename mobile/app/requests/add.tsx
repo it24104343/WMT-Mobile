@@ -189,8 +189,55 @@ export default function AddServiceRequestScreen() {
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Request Type Selector */}
-        {state.user?.role !== 'ADMIN' && (
+        {/* STEP 1: Recipient Selector (NOW FIRST) */}
+        <View style={styles.section}>
+          <Text style={styles.sectionLabel}>Send To <Text style={{color: '#ef4444'}}>*</Text></Text>
+          <View style={styles.priorityRow}>
+            {RECIPIENTS.filter(r => state.user?.role !== 'ADMIN' || r.value === 'TEACHER').map((r) => (
+              <TouchableOpacity
+                key={r.value}
+                style={[
+                  styles.priorityBtn, 
+                  form.recipient === r.value && styles.priorityBtnActive
+                ]}
+                onPress={() => {
+                  // If switching to Teacher, we usually treat it as a message (OTHER)
+                  setForm({ 
+                    ...form, 
+                    recipient: r.value, 
+                    targetTeacher: '', 
+                    type: r.value === 'TEACHER' ? 'OTHER' : form.type 
+                  });
+                }}
+              >
+                <Ionicons name={r.icon as any} size={18} color={form.recipient === r.value ? '#22c55e' : '#64748b'} />
+                <Text style={[styles.priorityBtnText, form.recipient === r.value && styles.priorityBtnTextActive]}>
+                  {r.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          {/* STEP 2 (TEACHER PATH): Select Specific Teacher */}
+          {form.recipient === 'TEACHER' && (
+            <View style={[styles.inputBox, { marginTop: 15 }]}>
+              <Text style={styles.fieldLabel}>Select Teacher <Text style={{color: '#ef4444'}}>*</Text></Text>
+              <TouchableOpacity 
+                style={styles.inputContainer}
+                onPress={() => setTeacherPickerVisible(true)}
+              >
+                <Ionicons name="person-outline" size={20} color="#22c55e" style={styles.inputIcon} />
+                <Text style={[styles.fieldText, !form.targetTeacher && { color: '#94a3b8' }]}>
+                  {form.targetTeacher ? (teachers.find((t: any) => t._id === form.targetTeacher)?.name || 'Teacher Selected') : 'Select which teacher to contact'}
+                </Text>
+                <Ionicons name="chevron-down" size={20} color="#94a3b8" />
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+
+        {/* STEP 2 (ADMIN PATH): Request Type Selector */}
+        {form.recipient === 'ADMIN' && state.user?.role !== 'ADMIN' && (
           <View style={styles.section}>
             <Text style={styles.sectionLabel}>What type of request? <Text style={{color: '#ef4444'}}>*</Text></Text>
             <View style={styles.typeGrid}>
@@ -214,47 +261,10 @@ export default function AddServiceRequestScreen() {
           </View>
         )}
 
-        {/* Recipient Selector */}
-        <View style={styles.section}>
-          <Text style={styles.sectionLabel}>Send To <Text style={{color: '#ef4444'}}>*</Text></Text>
-          <View style={styles.priorityRow}>
-            {RECIPIENTS.filter(r => state.user?.role !== 'ADMIN' || r.value === 'TEACHER').map((r) => (
-              <TouchableOpacity
-                key={r.value}
-                style={[
-                  styles.priorityBtn, 
-                  form.recipient === r.value && styles.priorityBtnActive
-                ]}
-                onPress={() => setForm({ ...form, recipient: r.value, targetTeacher: '' })}
-              >
-                <Ionicons name={r.icon as any} size={18} color={form.recipient === r.value ? '#22c55e' : '#64748b'} />
-                <Text style={[styles.priorityBtnText, form.recipient === r.value && styles.priorityBtnTextActive]}>
-                  {r.label}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-
-          {form.recipient === 'TEACHER' && (
-            <View style={[styles.inputBox, { marginTop: 15 }]}>
-              <Text style={styles.fieldLabel}>Select Teacher <Text style={{color: '#ef4444'}}>*</Text></Text>
-              <TouchableOpacity 
-                style={styles.inputContainer}
-                onPress={() => setTeacherPickerVisible(true)}
-              >
-                <Ionicons name="person-outline" size={20} color="#22c55e" style={styles.inputIcon} />
-                <Text style={[styles.fieldText, !form.targetTeacher && { color: '#94a3b8' }]}>
-                  {form.targetTeacher ? (teachers.find((t: any) => t._id === form.targetTeacher)?.name || 'Teacher Selected') : 'Select which teacher to contact'}
-                </Text>
-                <Ionicons name="chevron-down" size={20} color="#94a3b8" />
-              </TouchableOpacity>
-            </View>
-          )}
-        </View>
-
-        {/* Main Form Card */}
+        {/* STEP 3: Form Details Card */}
         <View style={styles.formCard}>
-          {form.type === 'LEAVE' ? (
+          {/* Conditional Fields for Leave Request (ONLY for Admin) */}
+          {form.recipient === 'ADMIN' && form.type === 'LEAVE' ? (
             <>
               <View style={styles.inputBox}>
                 <Text style={styles.fieldLabel}>Leave Date <Text style={{color: '#ef4444'}}>*</Text></Text>
@@ -304,11 +314,12 @@ export default function AddServiceRequestScreen() {
               </View>
             </>
           ) : (
+            /* Show Subject field for OTHER requests or Teacher messages */
             <View style={styles.inputBox}>
               <Text style={styles.fieldLabel}>Subject <Text style={{color: '#ef4444'}}>*</Text></Text>
               <TextInput
                 style={styles.textInput}
-                placeholder="Brief summary of your request"
+                placeholder={form.recipient === 'TEACHER' ? "Message subject..." : "Brief summary of your request"}
                 placeholderTextColor="#94a3b8"
                 value={form.subject}
                 onChangeText={(val) => setForm({ ...form, subject: val })}

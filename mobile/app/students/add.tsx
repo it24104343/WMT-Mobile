@@ -93,9 +93,9 @@ export default function AddStudentScreen() {
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       style={styles.container}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
     >
       <LinearGradient colors={['#1e293b', '#0f172a']} style={styles.header}>
         <View style={styles.headerTop}>
@@ -107,7 +107,11 @@ export default function AddStudentScreen() {
         </View>
       </LinearGradient>
 
-      <ScrollView style={styles.formContent} showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        style={styles.formContent} 
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Basic Information</Text>
           {renderInput('Full Name *', 'name', 'Enter full name', 'person-outline')}
@@ -274,7 +278,11 @@ const styles = StyleSheet.create({
   },
   formContent: {
     flex: 1,
+  },
+  scrollContent: {
     padding: Spacing.lg,
+    backgroundColor: '#f8fafc',
+    flexGrow: 1,
   },
   section: {
     backgroundColor: '#ffffff',

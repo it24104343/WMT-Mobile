@@ -7,7 +7,7 @@ const API_URL = API_CONFIG.BASE_URL;
 
 const apiClient = axios.create({
   baseURL: API_URL,
-  timeout: 10000,
+  timeout: 30000,
 });
 
 // Add token to requests

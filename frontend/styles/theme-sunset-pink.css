@@ -1,0 +1,66 @@
+/* 🌅 Sunset Purple & Pink Theme */
+:root {
+  --primary: #a855f7;
+  --primary-dark: #7c3aed;
+  --secondary: #ec4899;
+  --accent: #f472b6;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --background: #faf5ff;
+  --surface: #ffffff;
+  --surface-dark: #2e1065;
+  --text: #3f0f5c;
+  --text-light: #c084fc;
+  --border: #e9d5ff;
+}
+
+body {
+  background: linear-gradient(135deg, #faf5ff 0%, #fce7f3 100%);
+  color: var(--text);
+}
+
+.card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(250, 245, 255, 0.7));
+  border: 2px solid rgba(168, 85, 247, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(168, 85, 247, 0.1);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #a855f7, #ec4899);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 11px 24px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(168, 85, 247, 0.35);
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(168, 85, 247, 0.45);
+}
+
+.badge {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(236, 72, 153, 0.1));
+  border-left: 4px solid var(--primary);
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, #a855f7, #ec4899);
+  color: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 12px 32px rgba(168, 85, 247, 0.25);
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: #ffffff;
+}

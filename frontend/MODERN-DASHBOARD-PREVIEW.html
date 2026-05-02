@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Dashboard Preview</title>
+    <link rel="stylesheet" id="theme-link" href="styles/theme-modern-dashboard.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.10.3/Recharts.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+        }
+
+        .theme-selector {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .theme-selector-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .theme-selector h1 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-right: 1rem;
+            color: #1f2937;
+        }
+
+        .theme-buttons {
+            display: flex;
+            gap: 0.3rem;
+            flex-wrap: wrap;
+        }
+
+        .theme-btn {
+            padding: 0.4rem 0.8rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            background: white;
+            transition: all 0.2s ease;
+            font-size: 0.8rem;
+        }
+
+        .theme-btn:hover {
+            border-color: #5b7dff;
+            background: #f0f9ff;
+        }
+
+        .theme-btn.active {
+            background: #5b7dff;
+            color: white;
+            border-color: #5b7dff;
+        }
+
+        .dashboard-preview {
+            margin-top: 4rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px rgba(91, 125, 255, 0.08);
+            border: 1px solid rgba(91, 125, 255, 0.1);
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(91, 125, 255, 0.1), transparent);
+        }
+
+        .stat-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, rgba(91, 125, 255, 0.2), rgba(0, 212, 255, 0.2));
+        }
+
+        .stat-card-label {
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #1f2937;
+        }
+
+        .stat-card-change {
+            font-size: 0.85rem;
+            color: #00d4ff;
+            margin-top: 0.5rem;
+            font-weight: 600;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, #f5f7fc 0%, #eef2ff 100%);
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(91, 125, 255, 0.08);
+            border: 1px solid rgba(91, 125, 255, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .chart-card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #1f2937;
+        }
+
+        .chart-card-subtitle {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .data-table {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(91, 125, 255, 0.08);
+            border: 1px solid rgba(91, 125, 255, 0.1);
+            margin: 2rem;
+        }
+
+        .data-table-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(91, 125, 255, 0.1);
+            background: linear-gradient(135deg, rgba(91, 125, 255, 0.05), rgba(123, 104, 238, 0.05));
+        }
+
+        .data-table-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .data-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, rgba(91, 125, 255, 0.05), rgba(123, 104, 238, 0.05));
+            border-bottom: 1px solid rgba(91, 125, 255, 0.1);
+        }
+
+        .data-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(91, 125, 255, 0.05);
+            color: #6b7280;
+            font-size: 0.95rem;
+        }
+
+        .data-table tbody tr:hover {
+            background: rgba(91, 125, 255, 0.03);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: rgba(0, 212, 255, 0.15);
+            color: #00d4ff;
+        }
+
+        .badge-warning {
+            background: rgba(255, 165, 0, 0.15);
+            color: #ffa500;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: linear-gradient(135deg, #f5f7fc 0%, #eef2ff 100%);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: #6b7280;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+
+            .theme-buttons {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="theme-selector">
+        <div class="theme-selector-content">
+            <h1>Dashboard Themes</h1>
+            <div class="theme-buttons">
+                <button class="theme-btn active" onclick="switchTheme('theme-modern-dashboard.css')">🎨 Modern Dashboard</button>
+                <button class="theme-btn" onclick="switchTheme('theme-education-center.css')">🎓 Education</button>
+                <button class="theme-btn" onclick="switchTheme('theme-tech-blue.css')">💎 Tech Blue</button>
+                <button class="theme-btn" onclick="switchTheme('theme-fresh-green.css')">🌿 Fresh Green</button>
+                <button class="theme-btn" onclick="switchTheme('theme-dark-gold.css')">✨ Dark Gold</button>
+                <button class="theme-btn" onclick="switchTheme('theme-vibrant-coral.css')">🌊 Coral</button>
+                <button class="theme-btn" onclick="switchTheme('theme-minimalist-slate.css')">📐 Slate</button>
+                <button class="theme-btn" onclick="switchTheme('theme-sunset-pink.css')">🌅 Sunset</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="dashboard-preview">
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div>
+                            <div class="stat-card-label">Active Classes</div>
+                            <div class="stat-card-value">11</div>
+                            <div class="stat-card-change">+12% from last month</div>
+                        </div>
+                        <div class="stat-card-icon">📚</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div>
+                            <div class="stat-card-label">Students</div>
+                            <div class="stat-card-value">13</div>
+                            <div class="stat-card-change">+8% from last month</div>
+                        </div>
+                        <div class="stat-card-icon">👨‍🎓</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div>
+                            <div class="stat-card-label">Teachers</div>
+                            <div class="stat-card-value">9</div>
+                            <div class="stat-card-change">+5% from last month</div>
+                        </div>
+                        <div class="stat-card-icon">👨‍🏫</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div>
+                            <div class="stat-card-label">Total Revenue</div>
+                            <div class="stat-card-value">LKR 30.5K</div>
+                            <div class="stat-card-change">+15% from last month</div>
+                        </div>
+                        <div class="stat-card-icon">💰</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; padding: 0 2rem; margin-bottom: 2rem;">
+                <div class="chart-card">
+                    <h3 class="chart-card-title">Revenue Trend</h3>
+                    <p class="chart-card-subtitle">Last 6 months</p>
+                    <div style="height: 250px; background: linear-gradient(135deg, rgba(91, 125, 255, 0.1), rgba(0, 212, 255, 0.1)); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #6b7280;">
+                        Chart visualization area
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <h3 class="chart-card-title">Student Enrollment</h3>
+                    <p class="chart-card-subtitle">Monthly breakdown</p>
+                    <div style="height: 250px; background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(91, 125, 255, 0.1)); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #6b7280;">
+                        Chart visualization area
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Enrollments Table -->
+            <div class="data-table">
+                <div class="data-table-header">
+                    <h3>Recent Enrollments</h3>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Class</th>
+                            <th>Enrollment Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Mahela</td>
+                            <td>Mathematics - Grade 10</td>
+                            <td>4/5/2026</td>
+                            <td><span class="badge badge-success">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td>Mahela</td>
+                            <td>Science - Grade 10</td>
+                            <td>4/5/2026</td>
+                            <td><span class="badge badge-success">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td>Mahela</td>
+                            <td>Mathematics - Grade 12</td>
+                            <td>4/5/2026</td>
+                            <td><span class="badge badge-warning">Pending</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>Modern Dashboard Preview v1.0</strong></p>
+            <p>Click theme buttons above to switch between different dashboard designs</p>
+            <p style="margin-top: 1rem; font-size: 0.9rem;">✨ All styles are fully responsive and production-ready</p>
+        </div>
+    </div>
+
+    <script>
+        function switchTheme(themeName) {
+            const link = document.getElementById('theme-link');
+            link.href = `styles/${themeName}`;
+            
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            localStorage.setItem('preferredTheme', themeName);
+        }
+
+        window.addEventListener('load', () => {
+            const savedTheme = localStorage.getItem('preferredTheme') || 'theme-modern-dashboard.css';
+            const link = document.getElementById('theme-link');
+            link.href = `styles/${savedTheme}`;
+        });
+    </script>
+</body>
+</html>

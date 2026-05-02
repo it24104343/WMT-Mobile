@@ -4,8 +4,8 @@
 
 export const API_CONFIG = {
   // For Android Emulator: http://10.0.2.2:5000/api
-  // For Physical Device: http://YOUR_IP:5000/api (find IP with ipconfig)
-  BASE_URL: 'http://172.28.18.115:5000/api',
+  // For Production: https://mobile-deploy.onrender.com/api
+  BASE_URL: 'https://mobile-deploy.onrender.com/api',
 };
 
 export default API_CONFIG;

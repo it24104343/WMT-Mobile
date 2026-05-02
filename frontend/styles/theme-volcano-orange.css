@@ -1,0 +1,29 @@
+/* 🔥 Volcano Orange & Dark Theme */
+:root {
+  --primary: #ff6b35;
+  --primary-dark: #e54e2b;
+  --secondary: #2c1810;
+  --accent: #ffb703;
+  --success: #00d4aa;
+  --warning: #ffb700;
+  --danger: #ff3860;
+  --background: #0a0805;
+  --surface: #1a1410;
+  --surface-light: #2a1f15;
+  --text: #ffffff;
+  --text-light: #d4b5a0;
+  --border: #3a2f25;
+}
+
+body {
+  background: linear-gradient(135deg, #0a0805 0%, #1a1410 100%);
+  color: var(--text);
+}
+
+.card {
+  background: linear-gradient(135deg, rgba(42, 31, 21, 0.8), rgba(44, 24, 16, 0.6));
+  border: 1px solid rgba(255, 107, 53, 0.25);
+  border-radius: 14px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(255, 107, 53, 0.1);
+}

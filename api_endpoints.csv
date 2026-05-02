@@ -1,0 +1,39 @@
+Category,Method,Endpoint,Description,Auth Required
+Authentication,POST,/api/auth/register,Create a new user account,No
+Authentication,POST,/api/auth/login,Sign in and receive JWT token,No
+Authentication,GET,/api/profile,Get current user profile details,Yes
+Authentication,PUT,/api/profile,Update profile (Name, Phone, Image),Yes
+Authentication,PUT,/api/auth/password,Change account password,Yes
+Dashboard,GET,/api/dashboard/admin,"Overall revenue, enrollment & class stats",Yes
+Dashboard,GET,/api/dashboard/teacher,"Assigned classes, sessions & student count",Yes
+Dashboard,GET,/api/dashboard/student,"Enrolled classes, exams & attendance %",Yes
+Exams,GET,/api/exams,Fetch all available exams (filtered),Yes
+Exams,POST,/api/exams,Create a new exam paper (Admin/Teacher),Yes
+Exams,GET,/api/exams/:id,Get detailed exam info and questions,Yes
+Exams,PUT,/api/exams/:id,Update exam metadata,Yes
+Exams,PUT,/api/exams/:id/publish,Toggle exam visibility for students,Yes
+Exams,GET,/api/exams/:id/results,Fetch student attempts and analytics,Yes
+Exams,POST,/api/exams/:id/questions,Add a new question to the exam,Yes
+Exam Attempts,POST,/api/exams/:examId/attempt,Start a new student exam attempt,Yes
+Exam Attempts,PUT,/api/exams/:examId/attempt/submit,Submit answers for grading,Yes
+Exam Attempts,GET,/api/exams/:examId/attempt/:studentId,View specific student's attempt,Yes
+Exam Attempts,PUT,/api/exams/:examId/attempt/:studentId/grade,Manually grade written submissions,Yes
+Classes,GET,/api/classes,Fetch all available tution classes,Yes
+Classes,POST,/api/classes,Add a new class (Admin only),Yes
+Classes,GET,/api/classes/:id,Get detailed class information,Yes
+Enrollments,GET,/api/enrollments,Fetch all student enrollments,Yes
+Enrollments,POST,/api/enrollments,Enroll a student in a class,Yes
+Enrollments,GET,/api/enrollments/class/:id,List all students in a specific class,Yes
+Enrollments,GET,/api/enrollments/student/:id,List all classes for a specific student,Yes
+Payments,GET,/api/payments,Fetch payment history and logs,Yes
+Payments,POST,/api/payments,Record a new fee payment (Admin),Yes
+Payments,GET,/api/payments/stats,View monthly revenue collection trends,Yes
+Payments,PUT,/api/payments/:id/verify,Verify manual payment slip uploads,Yes
+Attendance,GET,/api/attendance,Get class attendance history,Yes
+Attendance,POST,/api/attendance/mark,Mark student attendance for a session,Yes
+Attendance,GET,/api/attendance/student/:id,View attendance for a specific student,Yes
+Messaging,GET,/api/service-requests,Fetch support/leave requests,Yes
+Messaging,POST,/api/service-requests,Submit a new request or direct message,Yes
+Messaging,PUT,/api/service-requests/:id/status,Update request (Pending/Resolved),Yes
+System,GET,/api/announcements,Fetch platform-wide notifications,Yes
+System,GET,/api/status,Check if backend is alive,No

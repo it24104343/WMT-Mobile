@@ -35,8 +35,9 @@ export default function ExamMarksScreen() {
 
   const fetchData = async () => {
     try {
-      const examRes = await apiClient.get(`/exams/${id}`);
-      const { exam: examData } = examRes.data.data;
+      // Fetch exam results which includes attempts
+      const resultsRes = await apiClient.get(`/exams/${id}/results`);
+      const { exam: examData, attempts } = resultsRes.data.data;
       setExam(examData);
 
       // Fetch students for the class this exam belongs to
@@ -44,10 +45,19 @@ export default function ExamMarksScreen() {
       const studentData = studentsRes.data.data;
       setStudents(studentData);
 
-      // Initialize marks from existing results if any
+      // Initialize marks from student attempts
       const initialMarks = {};
-      examData.results?.forEach(res => {
-        initialMarks[res.student] = res.marks?.toString();
+      attempts?.forEach(att => {
+        const studentId = typeof att.student === 'object' ? att.student._id : att.student;
+        const studentEmail = typeof att.student === 'object' ? att.student.email : null;
+        
+        const value = (att.finalScore != null) ? att.finalScore.toString() : 
+                      (att.status === 'SUBMITTED' || att.status === 'GRADED' ? '0' : null);
+        
+        if (value !== null) {
+          if (studentId) initialMarks[studentId] = value;
+          if (studentEmail) initialMarks[studentEmail.toLowerCase()] = value;
+        }
       });
       setMarks(initialMarks);
 
@@ -103,7 +113,9 @@ export default function ExamMarksScreen() {
     const studentId = s.student?.studentId || '';
     const matchesSearch = studentName.toLowerCase().includes(search.toLowerCase()) || 
                           studentId.toLowerCase().includes(search.toLowerCase());
-    const isAttended = !!marks[s._id];
+    const studentProfileId = s.student?._id;
+    const studentEmail = s.student?.email;
+    const isAttended = !!(marks[studentProfileId] || (studentEmail && marks[studentEmail.toLowerCase()]));
     
     if (activeFilter === 'ATTENDED') return matchesSearch && isAttended;
     if (activeFilter === 'ABSENT') return matchesSearch && !isAttended;
@@ -112,8 +124,17 @@ export default function ExamMarksScreen() {
 
   const stats = {
     total: students.length,
-    attended: Object.keys(marks).length,
-    passed: Object.values(marks).filter((m: any) => parseInt(m) >= (exam.passingMarks || 35)).length
+    attended: students.filter((s: any) => {
+      const studentProfileId = s.student?._id;
+      const studentEmail = s.student?.email;
+      return marks[studentProfileId] || (studentEmail && marks[studentEmail.toLowerCase()]);
+    }).length,
+    passed: students.filter((s: any) => {
+      const studentProfileId = s.student?._id;
+      const studentEmail = s.student?.email;
+      const markValue = marks[studentProfileId] || (studentEmail && marks[studentEmail.toLowerCase()]);
+      return markValue && parseInt(markValue) >= (exam.passingMarks || 35);
+    }).length
   };
 
   if (loading || !exam) {
@@ -135,17 +156,7 @@ export default function ExamMarksScreen() {
             <Text style={styles.title}>{exam.title}</Text>
             <Text style={styles.subtitle}>{exam.class?.className || 'Class Exam'}</Text>
           </View>
-          {isTeacher ? (
-            <TouchableOpacity 
-              style={[styles.saveButton, saving && { opacity: 0.7 }]}
-              onPress={handleSaveMarks}
-              disabled={saving}
-            >
-              {saving ? <ActivityIndicator size="small" color="#fff" /> : <Ionicons name="cloud-upload" size={24} color="#fff" />}
-            </TouchableOpacity>
-          ) : (
-            <View style={{ width: 40 }} />
-          )}
+          <View style={{ width: 40 }} />
         </View>
 
         <View style={styles.searchBar}>
@@ -193,9 +204,23 @@ export default function ExamMarksScreen() {
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         {filteredStudents.map((s, index) => {
-          const studentId = s.student?._id;
-          const grade = calculateGrade(marks[studentId]);
-          const isAbsent = !marks[studentId];
+          // Triple-check for attendance (by Student ID, User ID, or Email)
+          const studentProfileId = s.student?._id;
+          const studentEmail = s.student?.email;
+          
+          // Find if this student has an entry in our marks/attempts map
+          // We check the student profile ID first, as it's the most common match
+          let markValue = marks[studentProfileId];
+          
+          // Fallback check: if we didn't find it, look through the marks keys 
+          // to see if any key matches the student's email (if we have it)
+          if (!markValue && studentEmail) {
+            const matchKey = Object.keys(marks).find(key => key.toLowerCase() === studentEmail.toLowerCase());
+            if (matchKey) markValue = marks[matchKey];
+          }
+
+          const grade = calculateGrade(markValue);
+          const isAbsent = !markValue;
           
           return (
             <View key={index} style={[styles.studentCard, isAbsent && styles.absentCard]}>
@@ -207,7 +232,7 @@ export default function ExamMarksScreen() {
                 </View>
                 <View style={{ flex: 1 }}>
                   <Text style={styles.studentName}>{s.student?.name || s.student?.fullName}</Text>
-                  <Text style={styles.studentId}>{s.student?.studentId}</Text>
+                  <Text style={styles.studentId}>{s.student?.studentId || 'No ID'}</Text>
                 </View>
                 {isAbsent ? (
                   <View style={styles.absentBadge}>
@@ -217,8 +242,8 @@ export default function ExamMarksScreen() {
                   <View style={styles.scoreSection}>
                     <TextInput
                       style={styles.markInput}
-                      value={marks[student._id]}
-                      onChangeText={(val) => setMarks({ ...marks, [student._id]: val })}
+                      value={markValue}
+                      onChangeText={(val) => setMarks({ ...marks, [studentProfileId]: val })}
                       keyboardType="numeric"
                       placeholder="0"
                       editable={isTeacher}
