@@ -1,8 +1,13 @@
-# Ignore non-mobile folders ONLY
+# Ignore everything in the root EXCEPT the mobile folder
 backend/
 frontend/
-
-# Do NOT ignore package.json, eas.json or app.json!
-# Keep node_modules ignored to save upload time
 node_modules/
-**/node_modules/
+package.json
+package-lock.json
+capacitor.config.json
+*.md
+api_endpoints.csv
+scratch/
+
+# Ensure mobile is NOT ignored
+!mobile/
