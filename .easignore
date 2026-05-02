@@ -1,0 +1,14 @@
+# Ignore non-mobile folders to prevent EAS confusion
+backend/
+frontend/
+node_modules/
+package-lock.json
+package.json
+app.json
+eas.json
+API_ENDPOINTS.md
+MOBILE_SETUP.md
+README.md
+api_endpoints.csv
+capacitor.config.json
+scratch/
