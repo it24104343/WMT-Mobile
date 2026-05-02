@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "backend": "cd backend && npm run dev",
+    "frontend": "cd frontend && npm run dev",
+    "mobile": "cd mobile && npm start",
+    "dev": "npm run backend & npm run frontend & npm run mobile"
+  },
+  "dependencies": {
+    "@capacitor/cli": "^8.3.0",
+    "@capacitor/core": "^8.3.0",
+    "axios": "^1.15.2"
+  }
+}
