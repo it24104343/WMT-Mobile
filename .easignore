@@ -1,14 +1,8 @@
-# Ignore non-mobile folders to prevent EAS confusion
+# Ignore non-mobile folders ONLY
 backend/
 frontend/
+
+# Do NOT ignore package.json, eas.json or app.json!
+# Keep node_modules ignored to save upload time
 node_modules/
-package-lock.json
-package.json
-app.json
-eas.json
-API_ENDPOINTS.md
-MOBILE_SETUP.md
-README.md
-api_endpoints.csv
-capacitor.config.json
-scratch/
+**/node_modules/
