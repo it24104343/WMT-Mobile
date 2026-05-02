@@ -5,7 +5,7 @@
 export const API_CONFIG = {
   // For Android Emulator: http://10.0.2.2:5000/api
   // For Physical Device: http://YOUR_IP:5000/api (find IP with ipconfig)
-  BASE_URL: 'http://172.28.18.115:5000/api',
+  BASE_URL: 'http://192.168.8.111:5000/api',
 };
 
 export default API_CONFIG;

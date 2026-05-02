@@ -1,0 +1,29 @@
+/* 🌊 Ocean Deep Blue & Aqua Theme */
+:root {
+  --primary: #0099ff;
+  --primary-dark: #0077cc;
+  --secondary: #001a4d;
+  --accent: #00ffff;
+  --success: #00ff99;
+  --warning: #ffaa00;
+  --danger: #ff3366;
+  --background: #000818;
+  --surface: #001a3d;
+  --surface-light: #003366;
+  --text: #ffffff;
+  --text-light: #99ccff;
+  --border: #003399;
+}
+
+body {
+  background: linear-gradient(135deg, #000818 0%, #001a3d 100%);
+  color: var(--text);
+}
+
+.card {
+  background: linear-gradient(135deg, rgba(0, 26, 61, 0.8), rgba(0, 51, 102, 0.5));
+  border: 1px solid rgba(0, 153, 255, 0.25);
+  border-radius: 14px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 153, 255, 0.15);
+}

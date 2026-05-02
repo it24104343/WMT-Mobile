@@ -23,7 +23,7 @@ export default function ExamDetailsScreen() {
   const [loading, setLoading] = useState(true);
   const [exam, setExam] = useState<any>(null);
   const [questions, setQuestions] = useState<any[]>([]);
-
+  const [summary, setSummary] = useState<any>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [qForm, setQForm] = useState({
     type: 'MCQ',
@@ -41,7 +41,26 @@ export default function ExamDetailsScreen() {
       setExam(examData);
       setQuestions(qData || []);
 
+      // Fetch summary data
+      if (examData.class?._id) {
+        const enrollRes = await apiClient.get(`/enrollments/class/${examData.class._id}`);
+        const enrolledStudents = enrollRes.data.data || [];
+        const results = examData.results || [];
+        const attended = results.length;
+        const passed = results.filter((r: any) => r.marks >= 35).length;
+        const totalMarks = results.reduce((acc: number, curr: any) => acc + (curr.marks || 0), 0);
 
+        setSummary({
+          enrolled: enrolledStudents.length,
+          attended,
+          notAttended: enrolledStudents.length - attended,
+          passed,
+          failed: attended - passed,
+          avg: attended > 0 ? (totalMarks / attended).toFixed(1) : 0,
+          attendanceRate: enrolledStudents.length > 0 ? ((attended / enrolledStudents.length) * 100).toFixed(1) : 0,
+          passRate: attended > 0 ? ((passed / attended) * 100).toFixed(1) : 0
+        });
+      }
     } catch (error) {
       console.error('Failed to fetch exam details:', error);
       Alert.alert('Error', 'Failed to load exam details');
@@ -173,7 +192,53 @@ export default function ExamDetailsScreen() {
       </LinearGradient>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        {summary && (
+          <View style={styles.summaryContainer}>
+            <Text style={styles.sectionTitle}>Performance Summary</Text>
+            
+            <View style={styles.summaryGrid}>
+              <View style={styles.summaryItem}>
+                <Text style={styles.summaryVal}>{summary.enrolled}</Text>
+                <Text style={styles.summaryLab}>Enrolled</Text>
+              </View>
+              <View style={styles.summaryItem}>
+                <Text style={[styles.summaryVal, { color: '#10b981' }]}>{summary.attended}</Text>
+                <Text style={styles.summaryLab}>Attended</Text>
+              </View>
+              <View style={styles.summaryItem}>
+                <Text style={[styles.summaryVal, { color: '#ef4444' }]}>{summary.notAttended}</Text>
+                <Text style={styles.summaryLab}>Absent</Text>
+              </View>
+            </View>
 
+            <View style={[styles.summaryGrid, { marginTop: 24 }]}>
+              <View style={styles.summaryItem}>
+                <Text style={[styles.summaryVal, { color: '#10b981' }]}>{summary.passed}</Text>
+                <Text style={styles.summaryLab}>Passed</Text>
+              </View>
+              <View style={styles.summaryItem}>
+                <Text style={[styles.summaryVal, { color: '#ef4444' }]}>{summary.failed}</Text>
+                <Text style={styles.summaryLab}>Failed</Text>
+              </View>
+              <View style={styles.summaryItem}>
+                <Text style={[styles.summaryVal, { color: '#3b82f6' }]}>{summary.avg}</Text>
+                <Text style={styles.summaryLab}>Avg Marks</Text>
+              </View>
+            </View>
+
+            <View style={styles.percentageRow}>
+                <View style={styles.percentBox}>
+                    <Text style={styles.percentLab}>Attendance</Text>
+                    <Text style={[styles.percentVal, { color: '#10b981' }]}>{summary.attendanceRate}%</Text>
+                </View>
+                <View style={styles.percentDivider} />
+                <View style={styles.percentBox}>
+                    <Text style={styles.percentLab}>Pass Rate</Text>
+                    <Text style={[styles.percentVal, { color: '#3b82f6' }]}>{summary.passRate}%</Text>
+                </View>
+            </View>
+          </View>
+        )}
 
         {!isAdmin && (
           <View style={styles.statsContainer}>

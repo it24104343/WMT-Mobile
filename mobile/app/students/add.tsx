@@ -93,9 +93,8 @@ export default function AddStudentScreen() {
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
     >
       <LinearGradient colors={['#1e293b', '#0f172a']} style={styles.header}>
         <View style={styles.headerTop}>

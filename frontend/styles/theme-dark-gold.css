@@ -1,0 +1,66 @@
+/* ✨ Elegant Dark Gold Theme */
+:root {
+  --primary: #d97706;
+  --primary-dark: #92400e;
+  --secondary: #78350f;
+  --accent: #fcd34d;
+  --success: #22c55e;
+  --warning: #eab308;
+  --danger: #dc2626;
+  --background: #1f2937;
+  --surface: #111827;
+  --surface-light: #374151;
+  --text: #f3f4f6;
+  --text-light: #d1d5db;
+  --border: #d97706;
+}
+
+body {
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+  color: var(--text);
+}
+
+.card {
+  background: linear-gradient(135deg, rgba(31, 41, 55, 0.8), rgba(17, 24, 39, 0.6));
+  border: 2px solid rgba(217, 119, 6, 0.3);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(217, 119, 6, 0.1);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #d97706, #f59e0b);
+  color: #1f2937;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 20px rgba(217, 119, 6, 0.4);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(217, 119, 6, 0.5);
+}
+
+.badge {
+  background: linear-gradient(135deg, rgba(217, 119, 6, 0.15), rgba(252, 211, 77, 0.15));
+  border-left: 4px solid var(--accent);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, #d97706, #f59e0b);
+  color: #1f2937;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(217, 119, 6, 0.3);
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1f2937;
+}

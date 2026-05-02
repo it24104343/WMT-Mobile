@@ -1,0 +1,66 @@
+/* 🌊 Vibrant Coral & Orange Theme */
+:root {
+  --primary: #ff6b6b;
+  --primary-dark: #e63946;
+  --secondary: #ff8c42;
+  --accent: #ffb703;
+  --success: #06d6a0;
+  --warning: #ffa502;
+  --danger: #d62828;
+  --background: #fff5f7;
+  --surface: #ffffff;
+  --surface-dark: #2b2d42;
+  --text: #2d2d2d;
+  --text-light: #ff6b6b;
+  --border: #ffa89e;
+}
+
+body {
+  background: linear-gradient(135deg, #fff5f7 0%, #ffe8d6 100%);
+  color: var(--text);
+}
+
+.card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 245, 247, 0.7));
+  border: 2px solid rgba(255, 107, 107, 0.2);
+  border-radius: 14px;
+  box-shadow: 0 12px 35px rgba(255, 107, 107, 0.12);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #ff6b6b, #ff8c42);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 11px 22px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+}
+
+.badge {
+  background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(255, 140, 66, 0.1));
+  border-left: 4px solid var(--primary);
+  border-radius: 8px;
+  padding: 9px 13px;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, #ff6b6b, #ff8c42);
+  color: white;
+  border-radius: 14px;
+  padding: 22px;
+  box-shadow: 0 12px 35px rgba(255, 107, 107, 0.25);
+}
+
+.stat-value {
+  font-size: 30px;
+  font-weight: 700;
+  color: #ffffff;
+}
