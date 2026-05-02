@@ -1,0 +1,14 @@
+export { default as classService } from './classService';
+export { default as teacherService } from './teacherService';
+export { default as studentService } from './studentService';
+export { default as hallService } from './hallService';
+export { default as enrollmentService } from './enrollmentService';
+export { default as paymentService } from './paymentService';
+export { default as settingsService } from './settingsService';
+export { default as attendanceService } from './attendanceService';
+export { default as examService } from './examService';
+export { default as materialService } from './materialService';
+export { default as announcementService } from './announcementService';
+export { default as notificationService } from './notificationService';
+export { default as serviceRequestService } from './serviceRequestService';
+export { default as dashboardService } from './dashboardService';
