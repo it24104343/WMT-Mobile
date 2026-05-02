@@ -3,6 +3,11 @@
     "name": "Tuition Class Mobile",
     "slug": "tuition-class-mobile",
     "version": "1.0.0",
+    "extra": {
+      "eas": {
+        "projectId": "22debd37-d418-4ccc-bab7-24fcb8bd3efc"
+      }
+    },
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "tuitionclass",
