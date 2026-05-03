@@ -20,18 +20,35 @@ const teacherSchema = new mongoose.Schema(
       type: String,
       trim: true
     },
-    subject: {
+    subjects: [
+      {
+        type: String,
+        trim: true
+      }
+    ],
+    address: {
       type: String,
-      trim: true
+      trim: true,
+      default: ''
     },
-    qualifications: {
+    profileImage: {
       type: String,
-      trim: true
+      default: ''
     },
-    experience: {
+    registrationFee: {
       type: Number,
-      min: 0,
-      default: 0
+      default: 0,
+      min: [0, 'Fee cannot be negative']
+    },
+    paymentOption: {
+      type: String,
+      enum: ['PAY_NOW', 'PAY_LATER'],
+      default: 'PAY_NOW'
+    },
+    registrationPaymentStatus: {
+      type: String,
+      enum: ['PENDING', 'COMPLETED', 'NOT_REQUIRED'],
+      default: 'NOT_REQUIRED'
     },
     isActive: {
       type: Boolean,
@@ -45,5 +62,6 @@ const teacherSchema = new mongoose.Schema(
 
 // Index for efficient querying
 teacherSchema.index({ name: 'text' });
+teacherSchema.index({ isActive: 1 });
 
 module.exports = mongoose.model('Teacher', teacherSchema);
