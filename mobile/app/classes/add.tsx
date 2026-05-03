@@ -165,6 +165,21 @@ export default function AddClassScreen() {
       const [m, y] = form.targetMonthYear.split(' ');
       const classTitle = form.className || `${form.subject} - Grade ${form.grade}`;
 
+      // Convert AM/PM time to 24-hour HH:MM format for backend compatibility
+      const to24Hour = (timeStr: string): string => {
+        const clean = timeStr.replace(/\u202f/g, ' ').trim();
+        const match = clean.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/i);
+        if (!match) return clean;
+        let [, h, min, ampm] = match;
+        let hours = parseInt(h, 10);
+        if (ampm) {
+          const period = ampm.toUpperCase();
+          if (period === 'PM' && hours < 12) hours += 12;
+          if (period === 'AM' && hours === 12) hours = 0;
+        }
+        return `${hours.toString().padStart(2, '0')}:${min}`;
+      };
+
       const submitData = {
         ...form,
         className: classTitle,
@@ -173,9 +188,8 @@ export default function AddClassScreen() {
         targetMonth: m,
         targetYear: Number(y),
         paymentRequiredFromWeek: Number(form.paymentRequiredFromWeek),
-        // Sanitize time strings for non-standard whitespace (U+202F)
-        startTime: form.startTime.replace(/\u202f/g, ' '),
-        endTime: form.endTime.replace(/\u202f/g, ' '),
+        startTime: to24Hour(form.startTime),
+        endTime: to24Hour(form.endTime),
       };
       
       delete (submitData as any).teacherName;
@@ -214,16 +228,25 @@ export default function AddClassScreen() {
     }
   };
 
+  const formatTime = (date: Date): string => {
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const h = hours % 12 || 12;
+    const mm = minutes.toString().padStart(2, '0');
+    return `${h}:${mm} ${ampm}`;
+  };
+
   const onTimeChange = (event: any, selectedDate: Date | undefined, type: 'start' | 'end') => {
     if (type === 'start') {
       setShowStartTimePicker(false);
       if (selectedDate) {
-        setForm({ ...form, startTime: selectedDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) });
+        setForm({ ...form, startTime: formatTime(selectedDate) });
       }
     } else {
       setShowEndTimePicker(false);
       if (selectedDate) {
-        setForm({ ...form, endTime: selectedDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) });
+        setForm({ ...form, endTime: formatTime(selectedDate) });
       }
     }
   };
