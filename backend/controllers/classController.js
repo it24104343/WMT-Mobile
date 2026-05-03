@@ -298,7 +298,11 @@ const createClass = async (req, res, next) => {
       data: populatedClass
     });
   } catch (error) {
-    next(error);
+    console.error('Create class error:', error.message, 'Body:', req.body);
+    res.status(error.statusCode || 400).json({
+      success: false,
+      message: error.message || 'Failed to create class'
+    });
   }
 };
 

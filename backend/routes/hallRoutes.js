@@ -94,11 +94,11 @@ const availabilityCheckValidation = [
     .isIn(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
     .withMessage('Invalid day of week'),
   body('startTime')
-    .matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/)
-    .withMessage('Start time must be in HH:MM format'),
+    .matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?(\s?[AP]M)?$/i)
+    .withMessage('Start time must be in HH:MM or HH:MM AM/PM format'),
   body('endTime')
-    .matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/)
-    .withMessage('End time must be in HH:MM format'),
+    .matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?(\s?[AP]M)?$/i)
+    .withMessage('End time must be in HH:MM or HH:MM AM/PM format'),
   body('excludeClassId')
     .optional()
     .isMongoId()

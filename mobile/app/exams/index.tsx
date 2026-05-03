@@ -14,6 +14,7 @@ import { useRouter, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import apiClient from '../../src/utils/api';
+import { parseTimeToDate } from '../../src/utils/time';
 import { AuthContext } from '../../src/context/AuthContext';
 import { Colors, Spacing, BorderRadius, Shadow } from '../../constants/theme';
 
@@ -60,17 +61,10 @@ export default function ExamListScreen() {
     const scheduledDate = item.scheduledDate ? new Date(item.scheduledDate) : null;
     const endDate = item.endDate ? new Date(item.endDate) : null;
     
-    let startTime = scheduledDate ? new Date(scheduledDate) : null;
-    if (startTime && item.startTime) {
-      const [h, m] = item.startTime.split(':');
-      startTime.setHours(parseInt(h), parseInt(m), 0);
-    }
+    let startTime = scheduledDate ? parseTimeToDate(item.startTime, scheduledDate) : null;
     
-    let endDateTime = endDate ? new Date(endDate) : null;
-    if (endDateTime && item.endTime) {
-      const [h, m] = item.endTime.split(':');
-      endDateTime.setHours(parseInt(h), parseInt(m), 59);
-    } else if (startTime) {
+    let endDateTime = endDate ? parseTimeToDate(item.endTime, endDate) : null;
+    if (!endDateTime && startTime) {
       // Fallback to duration if no endDate
       endDateTime = new Date(startTime.getTime() + (item.duration || 60) * 60000);
     }
@@ -119,11 +113,7 @@ export default function ExamListScreen() {
     // Calculate if exam is active
     const now = new Date();
     const scheduledDate = item.scheduledDate ? new Date(item.scheduledDate) : null;
-    let startTime = scheduledDate;
-    if (startTime && item.startTime) {
-      const [h, m] = item.startTime.split(':');
-      startTime.setHours(parseInt(h), parseInt(m), 0);
-    }
+    let startTime = scheduledDate ? parseTimeToDate(item.startTime, scheduledDate) : null;
     
     const isPast = startTime && now > new Date(startTime.getTime() + (item.duration || 60) * 60000);
     const isFuture = startTime && now < startTime;

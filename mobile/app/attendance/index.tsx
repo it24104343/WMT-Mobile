@@ -13,6 +13,7 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import apiClient from '../../src/utils/api';
+import { timeToMinutes } from '../../src/utils/time';
 import { AuthContext } from '../../src/context/AuthContext';
 import { Colors, Spacing, BorderRadius, Shadow, GRadients } from '../../constants/theme';
 
@@ -188,11 +189,8 @@ export default function AttendanceScreen() {
     const currentMins = now.getMinutes();
     const currentTimeVal = currentHours * 60 + currentMins;
 
-    const [startH, startM] = cls.startTime.split(':').map(Number);
-    const [endH, endM] = cls.endTime.split(':').map(Number);
-    
-    const startVal = startH * 60 + startM;
-    const endVal = endH * 60 + endM;
+    const startVal = timeToMinutes(cls.startTime);
+    const endVal = timeToMinutes(cls.endTime);
 
     // Allow 15 minutes grace period before and after
     const gracePeriod = 15;
@@ -200,7 +198,7 @@ export default function AttendanceScreen() {
     if (currentTimeVal < (startVal - gracePeriod)) {
       return { 
         valid: false, 
-        reason: `Class hasn't started yet. You can start marking from ${startH}:${(startM-gracePeriod).toString().padStart(2,'0')}.` 
+        reason: `Class hasn't started yet. You can start marking from ${cls.startTime} (with 15m grace).` 
       };
     }
     

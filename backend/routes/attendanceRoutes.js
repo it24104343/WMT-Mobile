@@ -23,12 +23,12 @@ const createSessionValidation = [
     .withMessage('Valid date is required'),
   body('startTime')
     .optional()
-    .matches(/^\d{2}:\d{2}$/)
-    .withMessage('Start time must be in HH:MM format'),
+    .matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?(\s*[AP]M)?$/i)
+    .withMessage('Start time must be HH:MM or HH:MM AM/PM (V2)'),
   body('endTime')
     .optional()
-    .matches(/^\d{2}:\d{2}$/)
-    .withMessage('End time must be in HH:MM format'),
+    .matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?(\s*[AP]M)?$/i)
+    .withMessage('End time must be HH:MM or HH:MM AM/PM (V2)'),
   body('topic')
     .optional()
     .trim()

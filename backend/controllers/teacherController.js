@@ -55,6 +55,22 @@ const getTeachers = async (req, res, next) => {
           }
         }
       },
+      {
+        $addFields: {
+          subject: {
+            $cond: {
+              if: { $gt: [{ $size: { $ifNull: ['$subjects', []] } }, 0] },
+              then: { $arrayElemAt: ['$subjects', 0] },
+              else: {
+                $ifNull: [
+                  { $arrayElemAt: ['$assignedClasses.subject', 0] },
+                  'No Subject Assigned'
+                ]
+              }
+            }
+          }
+        }
+      },
       { $project: { assignedClasses: 0 } },
       { $sort: { name: 1 } },
       {
@@ -109,6 +125,7 @@ const getTeacherById = async (req, res, next) => {
       success: true,
       data: {
         ...teacher,
+        subject: teacher.subjects?.[0] || assignedClasses?.[0]?.subject || 'No Subject Assigned',
         assignedClasses
       }
     });

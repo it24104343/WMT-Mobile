@@ -11,7 +11,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import apiClient from '../../src/utils/api';
@@ -19,17 +19,48 @@ import { Colors, Spacing, BorderRadius, Shadow, GRadients } from '../../constant
 
 export default function AddTeacherScreen() {
   const router = useRouter();
+  const { id } = useLocalSearchParams();
+  const isEdit = !!id;
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(false);
   
   const [form, setForm] = useState({
     name: '',
     email: '',
-    phone: '', // Fixed: was contactNo
+    phone: '',
     subject: '',
     qualification: '',
     address: '',
     salary: '',
   });
+
+  React.useEffect(() => {
+    if (isEdit) {
+      fetchTeacherData();
+    }
+  }, [id]);
+
+  const fetchTeacherData = async () => {
+    setFetching(true);
+    try {
+      const response = await apiClient.get(`/teachers/${id}`);
+      const data = response.data.data;
+      setForm({
+        name: data.name || '',
+        email: data.email || '',
+        phone: data.phone || data.contactNo || '',
+        subject: data.subjects?.[0] || '',
+        qualification: data.qualification || '',
+        address: data.address || '',
+        salary: data.salary?.toString() || '',
+      });
+    } catch (error) {
+      console.error('Failed to fetch teacher:', error);
+      Alert.alert('Error', 'Failed to load teacher data');
+    } finally {
+      setFetching(false);
+    }
+  };
 
   const handleSubmit = async () => {
     if (!form.name || !form.subject || !form.phone) {
@@ -39,16 +70,25 @@ export default function AddTeacherScreen() {
 
     setLoading(true);
     try {
-      await apiClient.post('/teachers', {
+      const payload = {
         ...form,
-        subjects: [form.subject] // Backend expects 'subjects' array
-      });
-      Alert.alert('Success', 'Teacher added successfully', [
-        { text: 'OK', onPress: () => router.back() }
-      ]);
+        subjects: [form.subject]
+      };
+
+      if (isEdit) {
+        await apiClient.put(`/teachers/${id}`, payload);
+        Alert.alert('Success', 'Teacher updated successfully', [
+          { text: 'OK', onPress: () => router.back() }
+        ]);
+      } else {
+        await apiClient.post('/teachers', payload);
+        Alert.alert('Success', 'Teacher added successfully', [
+          { text: 'OK', onPress: () => router.back() }
+        ]);
+      }
     } catch (error) {
-      console.error('Failed to add teacher:', error);
-      Alert.alert('Error', error.response?.data?.message || 'Failed to add teacher');
+      console.error('Failed to save teacher:', error);
+      Alert.alert('Error', error.response?.data?.message || 'Failed to save teacher');
     } finally {
       setLoading(false);
     }

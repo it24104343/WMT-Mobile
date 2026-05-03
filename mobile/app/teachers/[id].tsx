@@ -13,6 +13,7 @@ import {
   Alert,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient as ExpoLinearGradient } from 'expo-linear-gradient';
 import apiClient from '../../src/utils/api';
@@ -40,10 +41,12 @@ export default function TeacherProfileScreen() {
     }
   };
 
-  useEffect(() => {
-    fetchTeacher();
-    fetchClasses();
-  }, [id]);
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchTeacher();
+      fetchClasses();
+    }, [id])
+  );
 
   const fetchClasses = async () => {
     try {
@@ -162,7 +165,7 @@ export default function TeacherProfileScreen() {
                 <TouchableOpacity 
                   key={index} 
                   style={styles.classItem}
-                  onPress={() => router.push(`/classes`)}
+                  onPress={() => router.push(`/classes/${cls._id || cls.id}`)}
                 >
                   <View style={[styles.classIcon, { backgroundColor: 'rgba(16, 185, 129, 0.1)' }]}>
                     <Ionicons name="book" size={20} color="#10b981" />

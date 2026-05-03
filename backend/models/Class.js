@@ -174,13 +174,34 @@ classSchema.index({ hall: 1, dayOfWeek: 1 });
 classSchema.index({ createdAt: -1 });  // For sorting
 classSchema.index({ isActive: 1, createdAt: -1 });  // Compound for dashboard
 
+// Helper function to convert time string (e.g., "10:00 AM", "02:30 PM") to minutes from midnight
+const timeToMinutes = (timeStr) => {
+  if (!timeStr) return 0;
+  // Match hours, minutes, optional seconds and optional AM/PM
+  const match = timeStr.match(/(\d+):(\d+)(?::\d+)?\s*(AM|PM)?/i);
+  if (!match) return 0;
+  
+  let [_, hours, minutes, ampm] = match;
+  hours = parseInt(hours, 10);
+  minutes = parseInt(minutes, 10);
+  
+  if (ampm) {
+    ampm = ampm.toUpperCase();
+    if (ampm === 'PM' && hours < 12) hours += 12;
+    if (ampm === 'AM' && hours === 12) hours = 0;
+  }
+  
+  return hours * 60 + minutes;
+};
+
 // Pre-save validation
 classSchema.pre('save', function (next) {
   // Time validation
   if (this.startTime && this.endTime) {
-    const start = this.startTime.replace(':', '');
-    const end = this.endTime.replace(':', '');
-    if (parseInt(start) >= parseInt(end)) {
+    const startMins = timeToMinutes(this.startTime);
+    const endMins = timeToMinutes(this.endTime);
+    
+    if (startMins >= endMins) {
       const error = new Error('End time must be after start time');
       error.statusCode = 400;
       return next(error);
@@ -212,14 +233,14 @@ classSchema.statics.checkTeacherConflict = async function (teacherId, dayOfWeek,
   }
 
   const conflictingClasses = await this.find(query);
+  const newStartMins = timeToMinutes(startTime);
+  const newEndMins = timeToMinutes(endTime);
 
   for (const existingClass of conflictingClasses) {
-    const newStart = parseInt(startTime.replace(':', ''));
-    const newEnd = parseInt(endTime.replace(':', ''));
-    const existingStart = parseInt(existingClass.startTime.replace(':', ''));
-    const existingEnd = parseInt(existingClass.endTime.replace(':', ''));
+    const existingStartMins = timeToMinutes(existingClass.startTime);
+    const existingEndMins = timeToMinutes(existingClass.endTime);
 
-    if (newStart < existingEnd && newEnd > existingStart) {
+    if (newStartMins < existingEndMins && newEndMins > existingStartMins) {
       return existingClass;
     }
   }
@@ -242,14 +263,14 @@ classSchema.statics.checkHallConflict = async function (hallId, dayOfWeek, start
   }
 
   const conflictingClasses = await this.find(query);
+  const newStartMins = timeToMinutes(startTime);
+  const newEndMins = timeToMinutes(endTime);
 
   for (const existingClass of conflictingClasses) {
-    const newStart = parseInt(startTime.replace(':', ''));
-    const newEnd = parseInt(endTime.replace(':', ''));
-    const existingStart = parseInt(existingClass.startTime.replace(':', ''));
-    const existingEnd = parseInt(existingClass.endTime.replace(':', ''));
+    const existingStartMins = timeToMinutes(existingClass.startTime);
+    const existingEndMins = timeToMinutes(existingClass.endTime);
 
-    if (newStart < existingEnd && newEnd > existingStart) {
+    if (newStartMins < existingEndMins && newEndMins > existingStartMins) {
       return existingClass;
     }
   }

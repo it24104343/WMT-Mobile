@@ -173,12 +173,17 @@ export default function AddClassScreen() {
         targetMonth: m,
         targetYear: Number(y),
         paymentRequiredFromWeek: Number(form.paymentRequiredFromWeek),
+        // Sanitize time strings for non-standard whitespace (U+202F)
+        startTime: form.startTime.replace(/\u202f/g, ' '),
+        endTime: form.endTime.replace(/\u202f/g, ' '),
       };
       
       delete (submitData as any).teacherName;
       delete (submitData as any).hallName;
       delete (submitData as any).targetMonthYear;
       if (form.mode !== 'PHYSICAL') delete submitData.hall;
+
+      console.log('Submitting class data:', submitData);
 
       if (isEdit) {
         await apiClient.put(`/classes/${id}`, submitData);
@@ -188,7 +193,22 @@ export default function AddClassScreen() {
         Alert.alert('Success', 'Class created successfully', [{ text: 'OK', onPress: () => router.back() }]);
       }
     } catch (error: any) {
-      Alert.alert('Error', error.response?.data?.message || 'Failed to save class');
+      console.error('Save class error:', error);
+      const backendMessage = error.response?.data?.message;
+      const validationErrors = error.response?.data?.errors;
+      
+      let displayMessage = 'Failed to save class';
+      
+      if (validationErrors && Array.isArray(validationErrors) && validationErrors.length > 0) {
+        displayMessage = `${validationErrors[0].message}`;
+      } else if (backendMessage) {
+        displayMessage = backendMessage;
+      } else if (error.message) {
+        displayMessage = error.message;
+      }
+
+      Alert.alert('Error', displayMessage);
+      console.error('Displaying error:', displayMessage);
     } finally {
       setLoading(false);
     }
@@ -611,6 +631,16 @@ const styles = StyleSheet.create({
     color: '#1e293b',
     fontSize: 15,
     fontWeight: '500',
+  },
+  selector: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#f8fafc',
+    borderRadius: 16,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
   },
   stickyFooter: {
     padding: 24,

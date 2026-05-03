@@ -10,6 +10,7 @@ import {
   RefreshControl,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import apiClient from '../../src/utils/api';
@@ -34,9 +35,11 @@ export default function TeacherListScreen() {
     }
   };
 
-  useEffect(() => {
-    fetchTeachers();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchTeachers();
+    }, [])
+  );
 
   const onRefresh = () => {
     setRefreshing(true);
