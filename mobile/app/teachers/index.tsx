@@ -46,9 +46,16 @@ export default function TeacherListScreen() {
     fetchTeachers();
   };
 
-  const filteredTeachers = teachers.filter(t => 
+  const getSubjectDisplay = (item: any): string => {
+    if (Array.isArray(item.subjects) && item.subjects.length > 0) {
+      return item.subjects.join(', ');
+    }
+    return item.subject || 'No Subject Assigned';
+  };
+
+  const filteredTeachers = teachers.filter((t: any) => 
     t.name?.toLowerCase().includes(search.toLowerCase()) ||
-    t.subject?.toLowerCase().includes(search.toLowerCase())
+    (Array.isArray(t.subjects) ? t.subjects.join(' ') : t.subject || '').toLowerCase().includes(search.toLowerCase())
   );
 
   const TeacherCard = ({ item }) => (
@@ -64,7 +71,7 @@ export default function TeacherListScreen() {
         </View>
         <View style={styles.info}>
           <Text style={styles.name}>{item.name}</Text>
-          <Text style={styles.subject}>{item.subject || 'No Subject Assigned'}</Text>
+          <Text style={styles.subject}>{getSubjectDisplay(item)}</Text>
         </View>
         <View style={styles.statusBadge}>
           <View style={styles.statusDot} />
