@@ -59,12 +59,12 @@ const classValidation = [
     .notEmpty()
     .withMessage('Start time is required')
     .matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?(\s*[AP]M)?$/i)
-    .withMessage('Start time must be HH:MM or HH:MM AM/PM (V2)'),
+    .withMessage('Start time must be HH:MM or HH:MM AM/PM (V3-FINAL)'),
   body('endTime')
     .notEmpty()
     .withMessage('End time is required')
     .matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?(\s*[AP]M)?$/i)
-    .withMessage('End time must be HH:MM or HH:MM AM/PM (V2)'),
+    .withMessage('End time must be HH:MM or HH:MM AM/PM (V3-FINAL)'),
   body('dayOfWeek')
     .notEmpty()
     .withMessage('Day of week is required')
@@ -155,11 +155,11 @@ const updateClassValidation = [
   body('startTime')
     .optional()
     .matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?(\s*[AP]M)?$/i)
-    .withMessage('Start time must be HH:MM or HH:MM AM/PM (V2)'),
+    .withMessage('Start time must be HH:MM or HH:MM AM/PM (V3-FINAL)'),
   body('endTime')
     .optional()
     .matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?(\s*[AP]M)?$/i)
-    .withMessage('End time must be HH:MM or HH:MM AM/PM (V2)'),
+    .withMessage('End time must be HH:MM or HH:MM AM/PM (V3-FINAL)'),
   body('dayOfWeek')
     .optional()
     .isIn(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
@@ -223,10 +223,10 @@ const availabilityCheckValidation = [
     .withMessage('Invalid day of week'),
   body('startTime')
     .matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?(\s*[AP]M)?$/i)
-    .withMessage('Start time must be HH:MM or HH:MM AM/PM (V2)'),
+    .withMessage('Start time must be HH:MM or HH:MM AM/PM (V3-FINAL)'),
   body('endTime')
     .matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?(\s*[AP]M)?$/i)
-    .withMessage('End time must be HH:MM or HH:MM AM/PM (V2)'),
+    .withMessage('End time must be HH:MM or HH:MM AM/PM (V3-FINAL)'),
   body('excludeClassId')
     .optional()
     .isMongoId()
