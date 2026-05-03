@@ -14,6 +14,7 @@ import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { AuthContext } from '../../src/context/AuthContext';
+import { useFocusEffect } from '@react-navigation/native';
 import apiClient from '../../src/utils/api';
 import { Colors, Spacing, BorderRadius, Shadow, GRadients } from '../../constants/theme';
 import { HelloWave } from '@/components/hello-wave';
@@ -78,12 +79,14 @@ export default function DashboardScreen() {
     }
   };
 
-  useEffect(() => {
-    if (state.token) {
-      fetchDashboard();
-      fetchProfile();
-    }
-  }, [state.token]);
+  useFocusEffect(
+    React.useCallback(() => {
+      if (state.token) {
+        fetchDashboard();
+        fetchProfile();
+      }
+    }, [state.token])
+  );
 
   const onRefresh = () => {
     setRefreshing(true);
